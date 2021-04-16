@@ -6,12 +6,12 @@
 
 void FPGSpherePluginRuntimeModule::StartupModule()
 {
-	PGLOG_LOG("FPGSpherePluginRuntimeModule::StartupModule()");
+	PGLOG_LOG(TEXT("FPGSpherePluginRuntimeModule::StartupModule()"));
 }
 
 void FPGSpherePluginRuntimeModule::ShutdownModule()
 {
-	PGLOG_LOG("FPGSpherePluginRuntimeModule::ShutdownModule()");
+	PGLOG_LOG(TEXT("FPGSpherePluginRuntimeModule::ShutdownModule()"));
 }
 
 #undef LOCTEXT_NAMESPACE
