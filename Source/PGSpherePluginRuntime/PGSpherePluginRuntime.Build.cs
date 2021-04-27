@@ -40,7 +40,7 @@ public class PGSpherePluginRuntime : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				
+				"ProceduralMeshComponent",
 			}
 		);
 		
