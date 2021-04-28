@@ -3,7 +3,6 @@
 
 #include "PGCubeSphere.h"
 #include "ProceduralMeshComponent.h"
-//#include "/Engine/Plugins/Runtime/ProceduralMeshComponent/Source/ProceduralMeshComponent/Public/ProceduralMeshComponent.h"
 
 APGCubeSphere::APGCubeSphere()
 {
@@ -13,7 +12,7 @@ APGCubeSphere::APGCubeSphere()
 
 void APGCubeSphere::CreateMeshComponent()
 {
-	//MeshComponent = CreateDefaultSubobject<UProceduralMeshComponent>("MeshComponent");
+	MeshComponent = CreateDefaultSubobject<UProceduralMeshComponent>("MeshComponent");
 }
 
 void APGCubeSphere::BeginPlay()

@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PGCubeSphere.generated.h"
 
-//class UProceduralMeshComponent;
+class UProceduralMeshComponent;
 
 UCLASS(Blueprintable)
 class PGSPHEREPLUGINRUNTIME_API APGCubeSphere : public AActor
@@ -20,8 +20,8 @@ protected:
 
 	void CreateMeshComponent();
 
-	//UPROPERTY(BlueprintReadWrite, Category=Mesh)
-	//UProceduralMeshComponent* MeshComponent;
+	UPROPERTY(BlueprintReadWrite, Category=Mesh)
+	UProceduralMeshComponent* MeshComponent;
 
 	virtual void BeginPlay() override;
 
