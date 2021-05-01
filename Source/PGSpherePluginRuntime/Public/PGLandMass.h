@@ -8,7 +8,7 @@
 
 class UProceduralMeshComponent;
 
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, Category = LandMass)
 class PGSPHEREPLUGINRUNTIME_API APGLandMass : public AActor
 {
 	GENERATED_BODY()
@@ -20,12 +20,36 @@ protected:
 
 	void CreateMeshComponent();
 
-	UPROPERTY(BlueprintReadWrite, Category=Mesh)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=Mesh)
 	UProceduralMeshComponent* MeshComponent;
 
 	virtual void BeginPlay() override;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category=LandMass)
+	void CreateVertices(FIntPoint InVerticesLength, FVector2D InVerticesSpace);
+
+	const TArray<FVector>& GetVertices() const;
+
+	UFUNCTION(BlueprintCallable, Category=LandMass)
+	void CreateTriangles();
+
+	const TArray<int>& GetTriangles() const;
+
+protected:
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category=Mesh)
+	TArray<FVector> Vertices;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category=Mesh)
+	FIntPoint VerticesLength;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Mesh)
+	FVector2D VerticesSpace;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Mesh)
+	TArray<int> Triangles;
 
 };
