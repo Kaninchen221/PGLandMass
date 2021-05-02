@@ -10,6 +10,8 @@ APGLandMass::APGLandMass()
 
 	CreateMeshComponent();
 	RootComponent = MeshComponent;
+
+	CreatePerlinNoise();
 }
 
 void APGLandMass::CreateMeshComponent()
@@ -17,10 +19,15 @@ void APGLandMass::CreateMeshComponent()
 	MeshComponent = CreateDefaultSubobject<UProceduralMeshComponent>("MeshComponent");
 }
 
+void APGLandMass::CreatePerlinNoise()
+{
+	PerlinNoise = CreateDefaultSubobject<UPGPerlinNoise>("PerlinNoise");
+}
+
 void APGLandMass::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void APGLandMass::Tick(float DeltaTime)
@@ -35,6 +42,9 @@ void APGLandMass::CreateVertices(FIntPoint InVerticesLength, FVector2D InVertice
 
 	VerticesLength = InVerticesLength;
 	VerticesSpace = InVerticesSpace;
+
+	int VerticesCount = VerticesLength.X * VerticesLength.Y;
+	Vertices.Reserve(VerticesCount);
 
 	FVector Vertex(0.f, 0.f, 0.f);
 	for (int VertexIndexY = 0; VertexIndexY < VerticesLength.Y; ++VertexIndexY)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PGPerlinNoise.h"
 #include "PGLandMass.generated.h"
 
 class UProceduralMeshComponent;
@@ -23,6 +24,11 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=Mesh)
 	UProceduralMeshComponent* MeshComponent;
 
+	void CreatePerlinNoise();
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category=Noise)
+	UPGPerlinNoise* PerlinNoise;
+
 	virtual void BeginPlay() override;
 
 public:	
@@ -40,7 +46,7 @@ public:
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category=Mesh)
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category=Mesh)
 	TArray<FVector> Vertices;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category=Mesh)
