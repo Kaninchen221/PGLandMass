@@ -43,6 +43,9 @@ public:
 
 	TArray<float> GenerateOctave(float Lacunarity, float Persistance, float OctaveNumber) const;
 
+	UFUNCTION(BlueprintCallable, Category = LandMass)
+	void ShuffleXY();
+
 protected:
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = LandMass)

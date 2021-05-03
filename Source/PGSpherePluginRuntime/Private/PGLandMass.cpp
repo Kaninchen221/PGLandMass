@@ -125,21 +125,42 @@ TArray<float> APGLandMass::GenerateOctave(float Lacunarity, float Persistance, f
 	TArray<float> Octave;
 	Octave.Reserve(Vertices.Num());
 
-	FDateTime ActualTime = FDateTime::Now();
-	int Time = ActualTime.GetMillisecond();
-
 	int Octaves = 1;
 
 	for (const FVector& Vertex : Vertices)
 	{
 		float X = Vertex.X * Frequency;
 		float Y = Vertex.Y * Frequency;
-		float Z = PerlinNoise->NormalizedOctaveNoise3D(X, Y, Time, Octaves);
+		float Z = PerlinNoise->NormalizedOctaveNoise2D(X, Y, Octaves);
 		Z *= Amplitude;
 		Octave.Add(Z);
-
-		++Time;
 	}
 
 	return Octave;
+}
+
+void APGLandMass::ShuffleXY()
+{
+	UPGPerlinNoise* PerlinNoise = NewObject<UPGPerlinNoise>();
+
+	FDateTime ActualTime = FDateTime::Now();
+	int Time = ActualTime.GetMillisecond();
+
+	auto Noise1D = [&PerlinNoise, &Time](float X, float MaxValue) -> float
+	{
+		++Time;
+		float Octaves = 1.f;
+		float Noise = PerlinNoise->NormalizedOctaveNoise2D(X, Time, Octaves);
+		Noise *= MaxValue;
+		return Noise;
+	};
+
+	for (FVector& Vertex : Vertices)
+	{
+		FVector Offset(0.f, 0.f, 0.f);
+		Offset.X = Noise1D(Vertex.Y, VerticesSpace.X);
+		Offset.Y = Noise1D(Vertex.X, VerticesSpace.Y);
+
+		Vertex += Offset;
+	}
 }
