@@ -85,7 +85,7 @@ bool FPGLandMassTest::RunTest(const FString& Parameters)
         APGLandMass* LandMass = CreateLandMass();
 
         FIntPoint VerticesLength(4, 4);
-        FVector2D VerticesSpace(1.f, 1.f);
+        FVector2D VerticesSpace(1.1f, 1.1f);
         LandMass->CreateVertices(VerticesLength, VerticesSpace);
         float Lacunarity = 2.f;
         float Persistance = 0.5f;

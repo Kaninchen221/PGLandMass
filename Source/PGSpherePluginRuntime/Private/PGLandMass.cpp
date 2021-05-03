@@ -132,8 +132,8 @@ TArray<float> APGLandMass::GenerateOctave(float Lacunarity, float Persistance, f
 
 	for (const FVector& Vertex : Vertices)
 	{
-		float X = (Vertex.X + 0.01f) * Frequency;
-		float Y = (Vertex.Y + 0.01f) * Frequency;
+		float X = Vertex.X * Frequency;
+		float Y = Vertex.Y * Frequency;
 		float Z = PerlinNoise->NormalizedOctaveNoise3D(X, Y, Time, Octaves);
 		Z *= Amplitude;
 		Octave.Add(Z);
