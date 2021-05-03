@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PGPerlinNoise.h"
 #include "PGLandMass.generated.h"
 
 class UProceduralMeshComponent;
@@ -24,11 +23,6 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=Mesh)
 	UProceduralMeshComponent* MeshComponent;
 
-	void CreatePerlinNoise();
-
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category=Noise)
-	UPGPerlinNoise* PerlinNoise;
-
 	virtual void BeginPlay() override;
 
 public:	
@@ -44,18 +38,23 @@ public:
 
 	const TArray<int>& GetTriangles() const;
 
+	UFUNCTION(BlueprintCallable, Category = LandMass)
+	void GenerateHeight(float Lacunarity, float Persistance, float Octaves);
+
+	TArray<float> GenerateOctave(float Lacunarity, float Persistance, float OctaveNumber) const;
+
 protected:
 
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category=Mesh)
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = LandMass)
 	TArray<FVector> Vertices;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category=Mesh)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = LandMass)
 	FIntPoint VerticesLength;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Mesh)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = LandMass)
 	FVector2D VerticesSpace;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Mesh)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = LandMass)
 	TArray<int> Triangles;
 
 };

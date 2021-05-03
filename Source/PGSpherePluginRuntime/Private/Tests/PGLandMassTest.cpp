@@ -73,12 +73,49 @@ bool FPGLandMassTest::RunTest(const FString& Parameters)
         TestEqual("Actual and Expected triangles count must be equal", ActualTrianglesCount, ExpectedTrianglesCount);
 
         TArray<int> ActualSecondTriangleBuffer({ Triangles[3], Triangles[4], Triangles[5] });
-        TArray<int> ExpectedSecondTriangleBuffer({ 3, 2, 1 });
+        TArray<int> ExpectedSecondTriangleBuffer({ 1, 2, 3 });
         for (int Index = 0; Index < 3; Index++) {
             int ActualIndex = ActualSecondTriangleBuffer[Index];
             int ExpectedIndex = ExpectedSecondTriangleBuffer[Index];
             TestEqual("Actual and Expected vertex index in buffer must be equal", ActualIndex, ExpectedIndex);
         }
+    }
+
+    {
+        APGLandMass* LandMass = CreateLandMass();
+
+        FIntPoint VerticesLength(4, 4);
+        FVector2D VerticesSpace(1.f, 1.f);
+        LandMass->CreateVertices(VerticesLength, VerticesSpace);
+        float Lacunarity = 2.f;
+        float Persistance = 0.5f;
+        float Octaves = 3.f;
+        LandMass->GenerateHeight(Lacunarity, Persistance, Octaves);
+
+        const TArray<FVector>& Vertices = LandMass->GetVertices();
+        float PreviousHeight = -1.f;
+        for (const FVector& Vertex : Vertices)
+        {
+            float Height = Vertex.Z;
+
+            TestNotEqual("Current and Previouse height shouldn't be equal", Height, PreviousHeight);
+
+            PreviousHeight = Height;
+        }
+    }
+
+    {
+        APGLandMass* LandMass = CreateLandMass();
+        FIntPoint VerticesLength(4, 4);
+        FVector2D VerticesSpace(1.f, 1.f);
+        LandMass->CreateVertices(VerticesLength, VerticesSpace);
+
+        float Lacunarity = 2.f;
+        float Persistance = 0.5f;
+        float OctaveNumber = 1.f;
+        TArray<float> Octave = LandMass->GenerateOctave(Lacunarity, Persistance, OctaveNumber);
+
+        TestNotEqual("Octave can't be empty", Octave.Num(), 0);
     }
 
     return true;

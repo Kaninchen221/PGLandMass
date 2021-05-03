@@ -3,6 +3,8 @@
 
 #include "PGLandMass.h"
 #include "ProceduralMeshComponent.h"
+#include "Misc/DateTime.h"
+#include "PGPerlinNoise.h"
 
 APGLandMass::APGLandMass()
 {
@@ -10,18 +12,11 @@ APGLandMass::APGLandMass()
 
 	CreateMeshComponent();
 	RootComponent = MeshComponent;
-
-	CreatePerlinNoise();
 }
 
 void APGLandMass::CreateMeshComponent()
 {
 	MeshComponent = CreateDefaultSubobject<UProceduralMeshComponent>("MeshComponent");
-}
-
-void APGLandMass::CreatePerlinNoise()
-{
-	PerlinNoise = CreateDefaultSubobject<UPGPerlinNoise>("PerlinNoise");
 }
 
 void APGLandMass::BeginPlay()
@@ -95,4 +90,56 @@ void APGLandMass::CreateTriangles()
 const TArray<int>& APGLandMass::GetTriangles() const
 {
 	return Triangles;
+}
+
+void APGLandMass::GenerateHeight(float Lacunarity, float Persistance, float Octaves)
+{
+	for (float OctaveIndex = 0; OctaveIndex < Octaves; OctaveIndex++)
+	{
+		TArray<float> Octave = GenerateOctave(Lacunarity, Persistance, OctaveIndex);
+		
+		for (int Index = 0; Index < Octave.Num(); Index++)
+		{
+			Vertices[Index].Z += Octave[Index];
+			//Vertices[Index].Z += Octave[Index] / Octaves;
+		}
+	}
+
+}
+
+TArray<float> APGLandMass::GenerateOctave(float Lacunarity, float Persistance, float OctaveNumber) const
+{
+	UPGPerlinNoise* PerlinNoise = NewObject<UPGPerlinNoise>();
+	if (!PerlinNoise) {
+		return TArray<float>();
+	}
+
+	const float MinOctaveNumber = 0.f;
+	const float MaxOctaveNumber = 100.f;
+	OctaveNumber = FMath::Clamp(OctaveNumber, MinOctaveNumber, MaxOctaveNumber);
+	OctaveNumber = FMath::Floor(OctaveNumber);
+
+	float Frequency = FMath::Pow(Lacunarity, OctaveNumber);
+	float Amplitude = FMath::Pow(Persistance, OctaveNumber);
+
+	TArray<float> Octave;
+	Octave.Reserve(Vertices.Num());
+
+	FDateTime ActualTime = FDateTime::Now();
+	int Time = ActualTime.GetMillisecond();
+
+	int Octaves = 1;
+
+	for (const FVector& Vertex : Vertices)
+	{
+		float X = (Vertex.X + 0.01f) * Frequency;
+		float Y = (Vertex.Y + 0.01f) * Frequency;
+		float Z = PerlinNoise->NormalizedOctaveNoise3D(X, Y, Time, Octaves);
+		Z *= Amplitude;
+		Octave.Add(Z);
+
+		++Time;
+	}
+
+	return Octave;
 }
