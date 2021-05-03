@@ -160,6 +160,7 @@ void APGLandMass::ShuffleXY()
 		++Time;
 		float Octaves = 1.f;
 		float Noise = PerlinNoise->NormalizedOctaveNoise2D(X, Time, Octaves);
+		Noise /= 2.f;
 		Noise *= MaxValue;
 		return Noise;
 	};
