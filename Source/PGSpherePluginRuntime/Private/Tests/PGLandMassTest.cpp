@@ -84,63 +84,10 @@ bool FPGLandMassTest::RunTest(const FString& Parameters)
     {
         APGLandMass* LandMass = CreateLandMass();
 
-        FIntPoint VerticesLength(4, 4);
-        FVector2D VerticesSpace(1.1f, 1.1f);
-        LandMass->CreateVertices(VerticesLength, VerticesSpace);
-        float Lacunarity = 2.f;
-        float Persistance = 0.5f;
-        float Octaves = 3.f;
-        LandMass->GenerateHeight(Lacunarity, Persistance, Octaves);
+        const UMaterial* ExpectedMaterial = nullptr;
+        const UMaterial* ActualMaterial = LandMass->GetMaterial();
 
-        const TArray<FVector>& Vertices = LandMass->GetVertices();
-        float PreviousHeight = -1.f;
-        for (const FVector& Vertex : Vertices)
-        {
-            float Height = Vertex.Z;
-
-            TestNotEqual("Current and Previouse height shouldn't be equal", Height, PreviousHeight);
-
-            PreviousHeight = Height;
-        }
-    }
-
-    {
-        APGLandMass* LandMass = CreateLandMass();
-        FIntPoint VerticesLength(4, 4);
-        FVector2D VerticesSpace(1.f, 1.f);
-        LandMass->CreateVertices(VerticesLength, VerticesSpace);
-
-        float Lacunarity = 2.f;
-        float Persistance = 0.5f;
-        float OctaveNumber = 1.f;
-        TArray<float> Octave = LandMass->GenerateOctave(Lacunarity, Persistance, OctaveNumber);
-
-        TestNotEqual("Octave can't be empty", Octave.Num(), 0);
-    }
-
-    {
-        APGLandMass* LandMass = CreateLandMass();
-        FIntPoint VerticesLength(4, 4);
-        FVector2D VerticesSpace(1.f, 1.f);
-        LandMass->CreateVertices(VerticesLength, VerticesSpace);
-
-        TArray<FVector> NotExpectedVertices = LandMass->GetVertices();
-
-        LandMass->ShuffleXY();
-
-        TArray<FVector> ActualVertices = LandMass->GetVertices();
-
-        for (int VertexIndex = 0; VertexIndex < ActualVertices.Num(); VertexIndex++)
-        {
-            FVector ActualVertex = ActualVertices[VertexIndex];
-            FVector NotExpectedVertex = NotExpectedVertices[VertexIndex];
-
-            TestNotEqual("After ShuffleXY the Actual vertices X value shouldn't be equal to previous vertex X",
-                ActualVertex.X, NotExpectedVertex.X);
-
-            TestNotEqual("After ShuffleXY the Actual vertices Y value shouldn't be equal to previous vertex Y",
-                ActualVertex.Y, NotExpectedVertex.Y);
-        }
+        TestEqual("Actual and Expected material must be equal", ActualMaterial, ExpectedMaterial);
     }
 
     return true;

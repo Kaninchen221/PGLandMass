@@ -7,6 +7,7 @@
 #include "PGLandMass.generated.h"
 
 class UProceduralMeshComponent;
+class UMaterial;
 
 UCLASS(Blueprintable, Category = LandMass)
 class PGSPHEREPLUGINRUNTIME_API APGLandMass : public AActor
@@ -23,10 +24,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=Mesh)
 	UProceduralMeshComponent* MeshComponent;
 
-	virtual void BeginPlay() override;
-
 public:	
-	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category=LandMass)
 	void CreateVertices(FIntPoint InVerticesLength, FVector2D InVerticesSpace);
@@ -38,26 +36,22 @@ public:
 
 	const TArray<int>& GetTriangles() const;
 
-	UFUNCTION(BlueprintCallable, Category = LandMass)
-	void GenerateHeight(float Lacunarity, float Persistance, float Octaves);
-
-	TArray<float> GenerateOctave(float Lacunarity, float Persistance, float OctaveNumber) const;
-
-	UFUNCTION(BlueprintCallable, Category = LandMass)
-	void ShuffleXY();
+	const UMaterial* GetMaterial() const;
 
 protected:
 
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = LandMass)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = LandMass)
 	TArray<FVector> Vertices;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = LandMass)
-	FIntPoint VerticesLength;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = LandMass)
+	FIntPoint VerticesCount;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = LandMass)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = LandMass)
 	FVector2D VerticesSpace;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = LandMass)
 	TArray<int> Triangles;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = LandMass)
+	UMaterial* Material;
 };
